@@ -19,8 +19,7 @@ x <- transform(x,Name=reorder(Name, TotalTime) )
 
 shinyServer(function(input, output) {
   
-  # Compute the forumla text in a reactive function since it is 
-  # shared by the output$caption and output$mpgPlot functions
+  # Compute the forumla text in a reactive function 
   formulaText <- reactive(function() {
     paste(input$variable," ",sep='')
   })
@@ -30,10 +29,9 @@ shinyServer(function(input, output) {
     formulaText()
   })
   
-  # Generate a plot of the requested variable against mpg and only 
-  # include outliers if requested
+  # Generate a plot of the requested variable using the selected company name
   output$Runners <- reactivePlot(function() {
-#     if (checkboxInput$outliers == FALSE) {
+#     if (checkboxInput$histogramPlot == FALSE) {
 # #                                 #   p <- qplot(TotalTime/60,data = subset(subset(x,Company == paste(input$company)),Gender != paste(input$variable,'')),binwidth=1, fill=Gender)+ylab("Runner Count")+xlab("Minutes") + scale_y_continuous(breaks=seq(0, 10, 1))
 # #                                     p <- qplot(TotalTime/60,Name, data = subset(subset(x,Company == paste(input$company)),Gender != paste(input$variable,'')), color = Gender)+xlab("Minutes")+ylab("Runner")+ ggtitle("Histogram")
 # #                                    print(p)}
@@ -46,11 +44,7 @@ shinyServer(function(input, output) {
     } else {
       p <- qplot(TotalTime/60,Name, data = subset(subset(x,Company == paste(input$company)),Gender != paste(input$variable,'')), color = Gender)+xlab("Minutes")+ylab("Runner")+ ggtitle(paste(input$company))
       print(p)
-      #print(str(checkboxInput$outliers))
      }
-    #p <- qplot(TotalTime/60,data = Running[which((Running$Gender) != paste(input$variable,'')),],binwidth=1, fill=Gender)+ylab("Runner Count")+xlab("Minutes") + scale_y_continuous(breaks=seq(0, 10, 1))
-#     p <- qplot(TotalTime/60,Name, data = subset(subset(x,Company == paste(input$company)),Gender != paste(input$variable,'')), color = Gender)+xlab("Minutes")+ylab("Runner")+ ggtitle(paste(input$company))
-#     print(p)
   }, height = 60+as.integer(12*nrow(subset(subset(x,Company == paste(input$company)),Gender != paste(input$variable,'')))))
   
 })
